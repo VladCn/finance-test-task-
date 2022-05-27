@@ -1,23 +1,13 @@
-import logo from './logo.svg';
-import './App.css';
+import TickersTable from "./components/TickersTable";
+import { jsonArray } from "./api/mock";
+import { tickerResponseAdapter } from "./utils";
 
 function App() {
+  const data = tickerResponseAdapter(jsonArray);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <TickersTable rows={data} />
     </div>
   );
 }
