@@ -21,9 +21,9 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import { Budge } from "../Budge";
 import { Status } from "../Status";
+import { TickersString } from "../TickersString";
 
 function descendingComparator(a, b, orderBy) {
-  console.log(a, b, orderBy);
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -338,6 +338,7 @@ export default function TickersTable({ rows }) {
             </TableBody>
           </Table>
         </TableContainer>
+
         <TablePagination
           rowsPerPageOptions={[6, 12, 25]}
           component="div"
@@ -347,6 +348,7 @@ export default function TickersTable({ rows }) {
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
+        <TickersString data={"asdfsdfsdfsf "} />
       </Paper>
     </Box>
   );

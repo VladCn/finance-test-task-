@@ -50,6 +50,7 @@ function getQuotes(socket) {
 
 function trackTickers(socket) {
   // run the first time immediately
+  console.log("hdjefhjsdfhjs");
   getQuotes(socket);
 
   // every N seconds

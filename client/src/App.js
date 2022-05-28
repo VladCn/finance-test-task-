@@ -1,13 +1,25 @@
 import TickersTable from "./components/TickersTable";
-import { jsonArray } from "./api/mock";
 import { tickerResponseAdapter } from "./utils";
+import { socket } from "./api/socket";
+import { useEffect, useState } from "react";
 
 function App() {
-  const data = tickerResponseAdapter(jsonArray);
+  const [tickers, setTickers] = useState([]);
+
+  useEffect(() => {
+    socket.emit("start");
+    socket.on("connect", () => {
+      console.log("connected");
+    });
+
+    socket.on("ticker", (data) => {
+      setTickers(tickerResponseAdapter(data));
+    });
+  }, []);
 
   return (
     <div className="App">
-      <TickersTable rows={data} />
+      <TickersTable rows={tickers} />
     </div>
   );
 }
