@@ -10,7 +10,8 @@ const Wrapper = styled("div")`
 export const StatusW = styled("div")`
   display: flex;
   align-items: center;
-  width: max-content;
+  width: 78px;
+  justify-content: space-between;
   padding: 2px 5px;
   border-radius: 5px;
   color: ${({ variant }) => {
