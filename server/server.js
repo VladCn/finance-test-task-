@@ -34,8 +34,8 @@ function utcDate() {
   );
 }
 
-function getQuotes(socket) {
-  const quotes = tickers.map((ticker) => ({
+function getQuotes(socket, tickersList = tickers) {
+  const quotes = tickersList?.map((ticker) => ({
     ticker,
     exchange: "NASDAQ",
     price: randomValue(100, 300, 2),
@@ -49,15 +49,16 @@ function getQuotes(socket) {
   socket.emit("ticker", quotes);
 }
 
-function trackTickers(socket, interval = FETCH_INTERVAL) {
+function trackTickers(socket, tickersList, interval = FETCH_INTERVAL) {
+  console.log(tickersList, interval);
   // run the first time immediately
-  getQuotes(socket);
+  getQuotes(socket, tickersList);
   // every N seconds
   if (INTERVAL_ID) {
     clearInterval(INTERVAL_ID);
   }
   INTERVAL_ID = setInterval(function () {
-    getQuotes(socket);
+    getQuotes(socket, tickersList);
   }, interval);
 
   socket.on("disconnect", function () {
@@ -80,11 +81,11 @@ app.get("/", function (req, res) {
 });
 
 socketServer.on("connection", (socket) => {
-  socket.on("start", () => {
-    trackTickers(socket);
+  socket.on("start", (tickersList) => {
+    trackTickers(socket, tickersList, FETCH_INTERVAL);
   });
-  socket.on("interval", (data) => {
-    trackTickers(socket, data);
+  socket.on("change", (tickersList, interval) => {
+    trackTickers(socket, tickersList, interval);
   });
 });
 

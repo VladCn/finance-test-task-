@@ -22,6 +22,8 @@ import { visuallyHidden } from "@mui/utils";
 import { Budge } from "../Budge";
 import { Status } from "../Status";
 import { TickersString } from "../TickersString";
+import { useDispatch } from "react-redux";
+import { deleteTicker } from "../../redux/slice";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -148,9 +150,7 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-const EnhancedTableToolbar = (props) => {
-  const { numSelected } = props;
-
+const EnhancedTableToolbar = ({ numSelected, handleDelete }) => {
   return (
     <Toolbar
       sx={{
@@ -187,7 +187,7 @@ const EnhancedTableToolbar = (props) => {
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton>
+          <IconButton onClick={handleDelete}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
@@ -207,6 +207,8 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function TickersTable({ rows }) {
+  const dispatch = useDispatch();
+
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("name");
   const [selected, setSelected] = React.useState([]);
@@ -247,7 +249,6 @@ export default function TickersTable({ rows }) {
 
     setSelected(newSelected);
   };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -255,6 +256,10 @@ export default function TickersTable({ rows }) {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+
+  const handleDelete = () => {
+    dispatch(deleteTicker(selected));
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
@@ -266,7 +271,10 @@ export default function TickersTable({ rows }) {
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar
+          numSelected={selected.length}
+          handleDelete={handleDelete}
+        />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -287,13 +295,13 @@ export default function TickersTable({ rows }) {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+                  const isItemSelected = isSelected(row.ticker);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name)}
+                      onClick={(event) => handleClick(event, row.ticker)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -348,7 +356,17 @@ export default function TickersTable({ rows }) {
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
-        <TickersString data={"asdfsdfsdfsf "} />
+        <TickersString
+          data={
+            <Box display={"flex"}>
+              Слава Україні
+              <img
+                alt={"flag"}
+                src="https://img.icons8.com/color/48/000000/ukraine.png"
+              />
+            </Box>
+          }
+        />
       </Paper>
     </Box>
   );
