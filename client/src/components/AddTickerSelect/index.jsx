@@ -45,27 +45,30 @@ export default function AddTickerSelect({
   }, [selectedTickers]);
 
   return (
-    <div>
-      <FormControl sx={{ m: 1, width: 300 }}>
-        <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
-        <Select
-          labelId="demo-multiple-checkbox-label"
-          id="demo-multiple-checkbox"
-          multiple
-          value={selected}
-          onChange={handleChange}
-          input={<OutlinedInput label="Tag" />}
-          renderValue={(selected) => selected.join(", ")}
-          MenuProps={MenuProps}
-        >
-          {options.map((name) => (
-            <MenuItem key={name} value={name}>
-              <Checkbox checked={selected.indexOf(name) > -1} />
-              <ListItemText primary={name} />
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </div>
+    <FormControl sx={{ m: 1, width: 300 }} data-testid="add-ticker-select">
+      <InputLabel
+        id="demo-multiple-checkbox-label"
+        data-testid="demo-multiple-checkbox-label"
+      >
+        Select tickers
+      </InputLabel>
+      <Select
+        labelId="demo-multiple-checkbox-label"
+        id="demo-multiple-checkbox"
+        multiple
+        value={selected}
+        onChange={handleChange}
+        input={<OutlinedInput label="Select tickers" />}
+        renderValue={(selected) => selected.join(", ")}
+        MenuProps={MenuProps}
+      >
+        {options.map((name) => (
+          <MenuItem key={name} value={name}>
+            <Checkbox checked={selected.indexOf(name) > -1} />
+            <ListItemText primary={name} />
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
 }
